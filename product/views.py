@@ -9,13 +9,13 @@ from product.models import Product,Category
 @api_view()
 def view_products(request):
     products = Product.objects.select_related("category").all()
-    serializer = ProductSerializer(products, many =True)
+    serializer = ProductSerializer(products, many =True , context={'request': request})
     return Response(serializer.data)
 
 @api_view()
-def view_specific_product(request,id):
-    product = get_object_or_404(Product,pk=id)
-    serializer = ProductSerializer(product)
+def view_specific_product(request,pk):
+    product = get_object_or_404(Product,pk=pk)
+    serializer = ProductSerializer(product , context={'request': request})
     return Response(serializer.data)
 
 @api_view()
@@ -25,7 +25,7 @@ def view_categorys(request):
     return Response(serializer.data)
 
 @api_view()
-def view_specific_category(request,id):
-    category = get_object_or_404(Category , pk = id)
+def view_specific_category(request,pk):
+    category = get_object_or_404(Category , pk = pk)
     serializer = CategorySerializer(category)
     return Response(serializer.data)
