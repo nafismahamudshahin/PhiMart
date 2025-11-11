@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 AUTH_USER_MODEL = "users.User"
-
+STATIC_URL = "static/"
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'product',
     'order',
     'api',
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -73,6 +75,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'phimart.wsgi.application'
 
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
