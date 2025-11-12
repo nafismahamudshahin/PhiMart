@@ -10,7 +10,13 @@ from decimal import Decimal
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id','name','description']
+        fields = ['id','name','description','product_cnt']
+    product_cnt = serializers.IntegerField()
+
+    # product_cnt = serializers.SerializerMethodField(method_name="products_count")
+
+    # def products_count(self,category):
+    #     return Product.objects.filter(category = category).all().count()
         
 # class ProductSerializer(serializers.Serializer):
 #     id = serializers.IntegerField()
@@ -46,3 +52,8 @@ class ProductSerializer(serializers.ModelSerializer):
     def calculate_tax(self , product):
         tax = (product.price * Decimal(1.1)) - product.price
         return round(tax,2)
+    
+    def validate_price(self,price):
+        if price<0:
+            raise serializers.ValidationError("Nagetive price not possible.")
+        
