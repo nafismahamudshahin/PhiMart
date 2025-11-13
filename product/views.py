@@ -38,6 +38,7 @@ class ViewProducts(APIView):
 #         else:
 #             return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
 
+# view all products
 class ViewSpecificProduct(APIView):
     def get(self,request , pk):
         product = get_object_or_404(Product,pk=pk)
@@ -54,6 +55,7 @@ class ViewSpecificProduct(APIView):
         product = get_object_or_404(Product,pk=pk)
         product.delete()
         return Response(status= status.HTTP_204_NO_CONTENT)
+
 
 # @api_view(['GET','PUT','DELETE'])
 # def view_specific_product(request,pk):
