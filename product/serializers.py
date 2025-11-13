@@ -11,12 +11,12 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id','name','description','product_cnt']
-    # product_cnt = serializers.IntegerField()
+    product_cnt = serializers.IntegerField(read_only = True)
 
-    product_cnt = serializers.SerializerMethodField(method_name="products_count")
+    # product_cnt = serializers.SerializerMethodField(method_name="products_count")
 
-    def products_count(self,category):
-        return Product.objects.filter(category = category).all().count()
+    # def products_count(self,category):
+        # return Product.objects.filter(category = category).all().count()
         
 # class ProductSerializer(serializers.Serializer):
 #     id = serializers.IntegerField()
