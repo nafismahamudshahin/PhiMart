@@ -10,8 +10,8 @@ from decimal import Decimal
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id','name','description','product_cnt']
-    product_cnt = serializers.IntegerField(read_only = True)
+        fields = ['id','name','description',]
+    # product_cnt = serializers.IntegerField(read_only = True)
 
     # product_cnt = serializers.SerializerMethodField(method_name="products_count")
 
@@ -41,13 +41,13 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id','name','price','description','stock','category','tax','created_at','updated_at']
+        fields = ['id','name','price','description','stock','tax','created_at','updated_at']
     tax = serializers.SerializerMethodField(method_name="calculate_tax")
 
-    category = serializers.HyperlinkedRelatedField(
-        queryset = Category.objects.all(),
-        view_name = "view-specific-category",
-    )
+    # category = serializers.HyperlinkedRelatedField(
+    #     queryset = Category.objects.all(),
+    #     view_name = "view-specific-category",
+    # )
 
     def calculate_tax(self , product):
         tax = (product.price * Decimal(1.1)) - product.price
@@ -57,15 +57,8 @@ class ProductSerializer(serializers.ModelSerializer):
         if price<0:
             raise serializers.ValidationError("Nagetive price not possible.")
         return price
+    
     def create(self, validated_data):
         product = Product(**validated_data)
-        product.other = 1
         product.save()
         return product
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.price = validated_data.get('price', instance.price)
-        instance.stock = validated_data.get('stock', instance.stock)
-        instance.save()
-        return instance
