@@ -56,7 +56,7 @@ class ProductSerializer(serializers.ModelSerializer):
     def validate_price(self,price):
         if price<0:
             raise serializers.ValidationError("Nagetive price not possible.")
-    
+        return price
     def create(self, validated_data):
         product = Product(**validated_data)
         product.other = 1
@@ -64,4 +64,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
 
     def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
+        instance.name = validated_data.get('name', instance.name)
+        instance.price = validated_data.get('price', instance.price)
+        instance.stock = validated_data.get('stock', instance.stock)
+        instance.save()
+        return instance

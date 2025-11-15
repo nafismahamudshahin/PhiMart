@@ -3,5 +3,5 @@ from product import views as v
 
 urlpatterns = [
     path('',v.ListCreateView.as_view(),name="products-list"),
-    path('<int:pk>',v.ViewSpecificProduct.as_view(),name="specific-product")
+    path('<int:id>',v.ViewSpecificProductApi.as_view(),name="specific-product")
 ]

@@ -1,19 +1,38 @@
+# import from django:
 from django.shortcuts import render , get_object_or_404
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django.db.models import Count 
 from django.http import HttpResponse
+
+# import from mine app:
 from product.serializers import ProductSerializer , CategorySerializer
 from product.models import Product,Category
+
+# import from rest framework:
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework import status
-from django.db.models import Count 
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView , RetrieveUpdateDestroyAPIView
 # Create your views here.
 
 class ListCreateView(ListCreateAPIView):
-    queryset = Product.objects.select_related("category").all()
+    # queryset = Product.objects.select_related("category").all()
     serializer_class = ProductSerializer
 
+    def get_queryset(self):
+        return Product.objects.select_related("category").all()
+
+class ViewSpecificProductApi(RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'id'
+
+    def delete(self, request, id):
+        product = get_object_or_404(Product,pk=id)
+        if product.stock==0:
+            product.delete()
+            return Response({'message':'delete success'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'message':'product could not delete'})
 
 
 class ViewProducts(APIView):
@@ -30,6 +49,8 @@ class ViewProducts(APIView):
         return Response(serializer.data)
 
 # view all products
+
+
 class ViewSpecificProduct(APIView):
     def get(self,request , pk):
         product = get_object_or_404(Product,pk=pk)
@@ -47,6 +68,9 @@ class ViewSpecificProduct(APIView):
         product.delete()
         return Response(status= status.HTTP_204_NO_CONTENT)
 
+class ViewCategorysApi(ListCreateAPIView):
+    queryset = Category.objects.annotate(product_cnt = Count('products'))
+    serializer_class = CategorySerializer
 
 class ViewCategorys(APIView):
     def get(self, request):
@@ -59,6 +83,11 @@ class ViewCategorys(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data , status = status.HTTP_201_CREATED)
+
+class ViewSpecificCategoryApi(RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
 
 class ViewSpecificCagegory(APIView):
     def get(self, request , pk):
