@@ -5,7 +5,7 @@ from product import views as v
 
 
 router = routers.DefaultRouter()
-router.register("products",v.ProductViewSet)
+router.register("products",v.ProductViewSet , basename="products")
 router.register("category",v.CagegoryViewSet)
 
 product_router = routers.NestedDefaultRouter(router, "products" , lookup = "product")

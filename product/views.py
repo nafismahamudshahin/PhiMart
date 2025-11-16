@@ -18,20 +18,27 @@ from rest_framework.viewsets import ModelViewSet
 
 # Create your views here.
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        category_id = self.request.query_params.get('cagegory_id')
+
+        if category_id is not None:
+            queryset = Product.objects.filter(category_id=category_id)
+            return queryset    
+        return queryset
+    
 
 class CagegoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 class ReviewViewSet(ModelViewSet):
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
         return Review.objects.filter(product_id = self.kwargs['product_pk'])
-
+ 
     def get_serializer_context(self):
         return {'product_id':self.kwargs['product_pk']}
 
