@@ -5,8 +5,8 @@ from django.http import HttpResponse
 
 
 # import from mine app:
-from product.serializers import ProductSerializer , CategorySerializer
-from product.models import Product,Category
+from product.serializers import ProductSerializer , CategorySerializer , ReviewSerializer
+from product.models import Product,Category , Review
 
 # import from rest framework:
 from rest_framework.decorators import api_view
@@ -25,6 +25,15 @@ class CagegoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        return Review.objects.filter(product_id = self.kwargs['product_pk'])
+
+    def get_serializer_context(self):
+        return {'product_id':self.kwargs['product_pk']}
 
 # class ListCreateView(ListCreateAPIView):
 #     # queryset = Product.objects.select_related("category").all()
