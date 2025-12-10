@@ -12,7 +12,7 @@ product_router = routers.NestedDefaultRouter(router, "products" , lookup = "prod
 product_router.register('reviews', v.ReviewViewSet , basename="product-review")
 
 # urlpatterns = router.urls + product_router.urls
-
+# link up with url:
 urlpatterns = [
     path('',include(router.urls)),
     path('',include(product_router.urls))
