@@ -3,7 +3,7 @@ from django.urls import path , include
 from rest_framework_nested import routers
 from product import views as v
 
-
+# router setup
 router = routers.DefaultRouter()
 router.register("products",v.ProductViewSet , basename="products")
 router.register("category",v.CagegoryViewSet)
