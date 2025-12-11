@@ -28,7 +28,7 @@ class ProductViewSet(ModelViewSet):
             return queryset    
         return queryset
     
-
+# category view set:
 class CagegoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
